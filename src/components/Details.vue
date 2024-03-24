@@ -235,7 +235,7 @@
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: center;
-        padding: 5rem 2.5rem 0.2rem 2.5rem;
+        padding: 1.5rem 2.5rem 0.2rem 2.5rem;
     }
 
     .button{
@@ -281,7 +281,7 @@
         width: 100%;
         height: 100%;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
     }
 
     .main-info-details{
