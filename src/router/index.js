@@ -8,8 +8,14 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/fav/",
-    name: "favorites",
+    path: "/add",
+    name: "Add",
+    component: () =>
+      import( "../views/AddView.vue"),
+  },
+  {
+    path: "/fav",
+    name: "Favorites",
     component: () =>
       import( "../views/FavoritesView.vue"),
   },
