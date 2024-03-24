@@ -1,77 +1,119 @@
 <template>
-  <div class="container-details">
-        <div class="all-info-details">
-            <div class="nav-details">
-                <router-link to="/" class="button back"><i class="fas fa-chevron-left"></i> Back</router-link>
-            </div>
-            <div class="info-details">
-                <div class="main-info-details">
-                    <div class="icon-details" v-html="getInitials()"></div>
-                    <div class="text-details">
-                      <input v-model="name"  placeholder="Name" class="add-button" required>
-                      <input v-model="surname" placeholder="Surname" class="add-button" required>
-                    </div>
-                </div>
-                <hr class="hr-info-details">
-                <div class="sub-info-details">
-                  <input v-model="email" placeholder="Email" class="add-button" required>
-                  <input v-model="phone" placeholder="Phone" class="add-button" required>
-                </div>
-                <div class="nav-info-details">
-                  <button @click="addDataToFirestore" class="button edit">Add</button>
-                  <router-link to="/" class="button delete">Cancel</router-link>
-                </div>
-            </div>
-        </div>
-    </div>
-  </template>
-
-<script>
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+    <div class="container-details">
+          <div class="all-info-details">
+              <div class="nav-details">
+                  <button @click="returnToMain" class="button back"><i class="fas fa-chevron-left"></i> Back</button>
+              </div>
+              <div class="info-details">
+                  <div class="main-info-details">
+                      <div class="icon-details" v-html="getInitials()"></div>
+                      <div class="text-details">
+                        <input v-model="name"  :placeholder="itemData.name" class="add-button" required>
+                        <input v-model="surname" :placeholder="itemData.surname" class="add-button" required>
+                      </div>
+                  </div>
+                  <hr class="hr-info-details">
+                  <div class="sub-info-details">
+                    <input v-model="email" :placeholder="itemData.email" class="add-button" required>
+                    <input v-model="phone" :placeholder="itemData.phone" class="add-button" required>
+                  </div>
+                  <div class="nav-info-details">
+                    <button @click="updateDataInFirestore" class="button edit">Save</button>
+                    <router-link to="/" class="button delete">Cancel</router-link>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </template>
+  
+  <script>
+  import { db } from "@/firebase.js";
+import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 
 export default {
   data() {
     return {
-      name: "",
-      surname: "",
-      email: "",
-      phone: ""
+        itemData: null
     };
   },
+  async created() {
+    // Populate data fields with current item's data
+    await this.fetchItemData();
+  },
   methods: {
-    async addDataToFirestore() {
-      try {
-        // Initialize Firestore and get reference to the collection
-        const db = getFirestore();
-        const collectionRef = collection(db, "data");
-        if (this.name && this.surname && this.email && this.phone){
-          await addDoc(collectionRef, {
-            name: this.name,
-            surname: this.surname,
-            email: this.email,
-            phone: this.phone
-          });
-          this.$router.push("/");
-          console.log("Data added successfully!");
-        } else {
-          alert('Please fill all fields')
+    async fetchItemData() {
+        const itemId = this.$route.params.id;
+        console.log(itemId)
+        try {
+            const docRef = doc(db, "data", itemId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+            this.itemData = docSnap.data();
+            } else {
+            console.log("No such document!");
+            }
+        } catch (error) {
+            console.error("Error fetching item data:", error.message);
         }
-        // Add data to Firestore
-        
+    },
+    async updateDataInFirestore() {
+      const itemId = this.$route.params.id;
+      try {
+        const db = getFirestore();
+        const itemRef = doc(db, "data", itemId);
+        let name='';
+        let surname='';
+        let email='';
+        let phone='';
+        if (this.name){
+            name = this.name;
+        }else{
+            name = this.itemData.name;
+        }
 
+        if (this.surname){
+            surname = this.surname;
+        }else{
+            surname = this.itemData.surname;
+        }
+
+        if (this.email){
+            email = this.email;
+        }else{
+            email = this.itemData.email;
+        }
+
+        if (this.phone){
+            phone = this.phone;
+        }else{
+            phone = this.itemData.phone;
+        }
+
+        await updateDoc(itemRef, {
+          name: name,
+          surname: surname,
+          email: email,
+          phone: phone
+        });
+        console.log("Document successfully updated!");
+        await this.$router.push("/");
+        this.$router.go();
       } catch (error) {
-        console.error("Error adding data: ", error);
+        console.error("Error updating document:", error.message);
       }
     },
+    async returnToMain(){
+        await this.$router.push("/");
+        this.$router.go();
+    },
     getInitials() {
-          return `<div class="initials-icon">NS</div>`;
-      }
+      return `<div class="initials-icon">NS</div>`;
+    }
   }
 };
 </script>
-  
-  <style>
-  @media only screen and (min-width: 750px) {
+    <style>
+    @media only screen and (min-width: 750px) {
     .add-button{
       background-color: #F2F2F2;
       padding: 0.7em 1.1em;
@@ -221,16 +263,21 @@ export default {
 
 
     @media only screen and (max-width: 750px) {
+
+        
       .add-button{
       background-color: #F2F2F2;
       padding: 0.1em 0.8em;
       border-radius: 6px;
       font-size: 1.1rem;
       min-width: 15vw;
-      width: 22vw;
-      max-width: 30vw;
+      width: 45vw;
+      max-width: 70vw;
       margin: 5px;
       outline: none;
+    }
+    .sub-info-details .add-button{
+        width: 80vw;   
     }
     .add-button:focus {
       background-color: #E0E0E0;
@@ -353,11 +400,11 @@ export default {
         font-size: 1.5rem;
         align-items: flex-start;
         justify-content: center;
-        padding-left: 20%;
+        /* padding-left: 20%; */
         gap: 1rem;
     }
 }
-  </style>
-  
-  
-  
+</style>
+    
+    
+    

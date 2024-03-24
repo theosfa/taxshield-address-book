@@ -19,6 +19,18 @@ const routes = [
     component: () =>
       import( "../views/FavoritesView.vue"),
   },
+  {
+    path: "/details/:id",
+    name: "Details",
+    component: () =>
+      import( "../views/DetailsView.vue"),
+  },
+  {
+    path: "/edit/:id",
+    name: "Edit",
+    component: () =>
+      import( "../views/EditView.vue"),
+  },
 ];
 
 const router = createRouter({
