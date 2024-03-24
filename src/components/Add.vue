@@ -356,7 +356,7 @@ export default {
         font-size: 1.5rem;
         align-items: flex-start;
         justify-content: center;
-        padding-left: 20%;
+        /* padding-left: 20%; */
         gap: 1rem;
     }
 }
