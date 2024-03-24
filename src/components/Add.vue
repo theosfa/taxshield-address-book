@@ -227,10 +227,13 @@ export default {
       border-radius: 6px;
       font-size: 1.1rem;
       min-width: 15vw;
-      width: 22vw;
-      max-width: 30vw;
+      width: 45vw;
+      max-width: 70vw;
       margin: 5px;
       outline: none;
+    }
+    .sub-info-details .add-button{
+        width: 80vw;   
     }
     .add-button:focus {
       background-color: #E0E0E0;
