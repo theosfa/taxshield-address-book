@@ -5,12 +5,12 @@
         <input type="text" v-model="email" placeholder="Search" class="inp" required>
       </div>
       <div class="buttons">
-        <button class="all">All</button>
+        <button class="all" @click="email = ''">All</button>
         <router-link to="/fav" class="fav">Favorites</router-link>
       </div>
     </div>
     <div class="all-container">
-      <div v-for="(item, index) in items" :key="index" class="info-all">
+      <div v-for="(item, index) in filteredItems" :key="index" class="info-all">
         <router-link :to="'/details/' + item.id" class="info">
           <div class="icon" v-html="getInitials(item.data.name, item.data.surname)"></div>
           <div class="nsep">
@@ -36,6 +36,7 @@
   <router-link to="/add" class="but">+</router-link>
 </template>
 
+
 <script>
 import { db } from "@/firebase.js";
 import { collection, getDocs } from "firebase/firestore";
@@ -51,13 +52,16 @@ export default {
     await this.fetchData();
   },
   computed: {
-    filteredItems() {
-      // Filter items based on email input value
-      return this.items.filter(item => 
-        item.data.email.toLowerCase().includes(this.email.toLowerCase())
-      );
-    }
-  },
+  filteredItems() {
+    // Filter items based on email or name input value
+    const query = this.email.toLowerCase().trim();
+    return this.items.filter(item => 
+      item.data.email.toLowerCase().includes(query) ||
+      item.data.name.toLowerCase().includes(query) ||
+      item.data.surname.toLowerCase().includes(query)
+    );
+  }
+},
   methods: {
     async fetchData() {
       try {
