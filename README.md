@@ -4,6 +4,10 @@
 to see project demo go on:
 https://taxshield-address-book.vercel.app/
 
+## Future updates
+In future there will be added acounts and Favorites features
+So you can freely store your data secretly
+
 ## Project setup
 ```
 npm install

@@ -24,7 +24,7 @@
               </div>
             </div>
             <div class="phone">
-              +48 {{ item.data.phone }}
+              {{ item.data.phone }}
             </div>
           </div>
           <i class="fa fa-chevron-right"></i>
@@ -58,7 +58,8 @@ export default {
     return this.items.filter(item => 
       item.data.email.toLowerCase().includes(query) ||
       item.data.name.toLowerCase().includes(query) ||
-      item.data.surname.toLowerCase().includes(query)
+      item.data.surname.toLowerCase().includes(query)||
+      item.data.phone.toLowerCase().includes(query)
     );
   }
 },
